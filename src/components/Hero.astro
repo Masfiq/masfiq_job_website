@@ -1,0 +1,474 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/content';
+import { newTab, newTabHint } from '../lib/links';
+
+const sources = [
+  { name: 'ACS', tone: 'tone-blue' },
+  { name: 'HMDA', tone: 'tone-green' },
+  { name: 'USDA', tone: 'tone-amber' },
+  { name: 'CDC PLACES', tone: 'tone-red' },
+  { name: 'Gazetteer', tone: 'tone-violet' },
+];
+---
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero__glow" aria-hidden="true">
+    <span class="blob blob--blue"></span>
+    <span class="blob blob--teal"></span>
+    <span class="blob blob--violet"></span>
+    <span class="blob blob--amber"></span>
+  </div>
+
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <p class="hero__role">{site.headline}</p>
+      <h1 id="hero-title" class="hero__title">{site.name}</h1>
+      <p class="hero__summary">{site.summary}</p>
+
+      <div class="hero__actions">
+        <a class="btn btn--filled" href="#projects">
+          View Projects
+          <Icon name="arrow-down" />
+        </a>
+        <a class="btn btn--blue" href={site.resume} {...newTab}>
+          <Icon name="download" />
+          Download Resume
+          <span class="sr-only">{newTabHint}</span>
+        </a>
+        <a class="btn btn--outlined tone-violet" href={site.github} {...newTab}>
+          <Icon name="github" />
+          GitHub
+          <span class="sr-only">{newTabHint}</span>
+        </a>
+      </div>
+
+      <ul class="hero__links">
+        <li>
+          <a class="tone-blue" href={site.linkedin} {...newTab}>
+            <Icon name="linkedin" />
+            LinkedIn
+            <span class="sr-only">{newTabHint}</span>
+          </a>
+        </li>
+        <li>
+          <a class="tone-teal" href={site.scholar} {...newTab}>
+            <Icon name="scholar" />
+            Google Scholar
+            <span class="sr-only">{newTabHint}</span>
+          </a>
+        </li>
+        <li>
+          <a class="tone-red" href={`mailto:${site.email}`}>
+            <Icon name="mail" />
+            {site.email}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <figure class="pipeline" aria-label="Diagram of the Colorado Inequality Data Harmonizer pipeline">
+      <figcaption class="pipeline__head">
+        <span class="pipeline__dots" aria-hidden="true"><span></span><span></span><span></span></span>
+        Colorado Inequality Data Harmonizer
+      </figcaption>
+
+      <ol class="pipeline__steps">
+        <li class="pipeline__step tone-blue">
+          <span class="pipeline__label">Ingest</span>
+          <span class="pipeline__body">
+            <span class="pipeline__text">Five federal sources</span>
+            <span class="pipeline__chips">
+              {sources.map((s) => <span class={`tag ${s.tone}`}>{s.name}</span>)}
+            </span>
+          </span>
+        </li>
+        <li class="pipeline__step tone-green">
+          <span class="pipeline__label">Transform</span>
+          <span class="pipeline__body">
+            <span class="pipeline__text">ETL in Python and Pandas, 2010 and 2020 tracts reconciled</span>
+          </span>
+        </li>
+        <li class="pipeline__step tone-amber">
+          <span class="pipeline__label">Validate</span>
+          <span class="pipeline__body">
+            <span class="pipeline__text pipeline__check">
+              <Icon name="check" />
+              23 automated checks
+            </span>
+          </span>
+        </li>
+        <li class="pipeline__step tone-violet">
+          <span class="pipeline__label">Serve</span>
+          <span class="pipeline__body">
+            <span class="pipeline__serve">
+              <span class="tag">FastAPI</span>
+              <Icon name="arrow-right" class="pipeline__arrow" />
+              <span class="tag">Streamlit map</span>
+            </span>
+          </span>
+        </li>
+      </ol>
+
+      <div class="pipeline__stats">
+        <div class="tone-blue">
+          <span class="pipeline__num">1,447</span>
+          <span class="pipeline__unit">census tracts</span>
+        </div>
+        <div class="tone-green">
+          <span class="pipeline__num">130</span>
+          <span class="pipeline__unit">columns</span>
+        </div>
+        <div class="tone-amber">
+          <span class="pipeline__num">23</span>
+          <span class="pipeline__unit">validation checks</span>
+        </div>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(48px, 8vw, 112px) clamp(64px, 9vw, 128px);
+  }
+
+  /* Soft colored light behind the hero */
+  .hero__glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.5;
+  }
+
+  .blob--blue {
+    top: -12%;
+    right: 4%;
+    width: 520px;
+    height: 520px;
+    background: #c6dafc;
+  }
+
+  .blob--teal {
+    top: 30%;
+    right: 30%;
+    width: 360px;
+    height: 360px;
+    background: #b2dfdb;
+  }
+
+  .blob--violet {
+    bottom: -20%;
+    right: -6%;
+    width: 440px;
+    height: 440px;
+    background: #e4cffa;
+  }
+
+  .blob--amber {
+    bottom: -14%;
+    left: -8%;
+    width: 380px;
+    height: 380px;
+    background: #fde2c4;
+  }
+
+  .hero__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(40px, 6vw, 80px);
+  }
+
+  .hero__role {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: var(--pill);
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid var(--border);
+    color: var(--teal-ink);
+    font-size: clamp(0.875rem, 1.4vw, 1rem);
+    font-weight: 500;
+  }
+
+  .hero__title {
+    margin-top: 20px;
+    padding-bottom: 0.08em;
+    background: linear-gradient(90deg, var(--teal-ink), var(--blue) 45%, var(--violet-ink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: var(--teal-ink);
+    -webkit-text-fill-color: transparent;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+
+  .hero__summary {
+    max-width: 34ch;
+    margin-top: 20px;
+    color: var(--text-2);
+    font-size: clamp(1.25rem, 2.2vw, 1.625rem);
+    line-height: 1.45;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 40px;
+  }
+
+  .hero__actions .btn--outlined {
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .hero__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin-top: 28px;
+    list-style: none;
+  }
+
+  .hero__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    color: var(--text-2);
+    font-size: 0.9375rem;
+    text-decoration: none;
+  }
+
+  .hero__links a:hover {
+    color: var(--c-ink);
+    text-decoration: underline;
+  }
+
+  .hero__links :global(svg) {
+    width: 18px;
+    height: 18px;
+    color: var(--c);
+  }
+
+  /* Pipeline diagram card */
+  .pipeline {
+    margin: 0;
+    padding: clamp(20px, 3vw, 28px);
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-3);
+  }
+
+  .pipeline__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .pipeline__dots {
+    display: inline-flex;
+    gap: 6px;
+  }
+
+  .pipeline__dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .pipeline__dots span:nth-child(1) {
+    background: var(--red);
+  }
+  .pipeline__dots span:nth-child(2) {
+    background: var(--amber);
+  }
+  .pipeline__dots span:nth-child(3) {
+    background: var(--green);
+  }
+
+  .pipeline__steps {
+    position: relative;
+    margin: 0;
+    padding: 20px 0 4px;
+    list-style: none;
+  }
+
+  .pipeline__step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 16px;
+    padding-bottom: 20px;
+  }
+
+  /* connector line */
+  .pipeline__step::before {
+    content: '';
+    position: absolute;
+    left: 98px;
+    top: 10px;
+    bottom: -8px;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .pipeline__step:last-child::before {
+    display: none;
+  }
+
+  .pipeline__step::after {
+    content: '';
+    position: absolute;
+    left: 93px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--c);
+    box-shadow: 0 0 0 4px var(--c-tint);
+  }
+
+  .pipeline__label {
+    color: var(--c-ink);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.6;
+  }
+
+  .pipeline__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 16px;
+  }
+
+  .pipeline__text {
+    color: var(--text);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  .pipeline__chips,
+  .pipeline__serve {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pipeline__check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pipeline__check :global(svg) {
+    width: 18px;
+    height: 18px;
+    padding: 2px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #ffffff;
+    stroke-width: 3;
+  }
+
+  .pipeline__serve :global(.pipeline__arrow) {
+    width: 16px;
+    height: 16px;
+    color: var(--text-3);
+  }
+
+  .pipeline__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .pipeline__stats div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 14px;
+    border-radius: 16px;
+    background: var(--c-tint);
+  }
+
+  .pipeline__num {
+    color: var(--c-ink);
+    font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  .pipeline__unit {
+    color: var(--c-ink);
+    font-size: 0.8125rem;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 960px) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .pipeline {
+      max-width: 560px;
+    }
+
+    .blob--teal {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero__actions .btn {
+      flex: 1 1 100%;
+    }
+
+    .pipeline__step {
+      grid-template-columns: 80px 1fr;
+      gap: 12px;
+    }
+
+    .pipeline__label {
+      font-size: 0.75rem;
+      letter-spacing: 0.02em;
+    }
+
+    .pipeline__body {
+      padding-left: 12px;
+    }
+
+    .pipeline__step::before {
+      left: 85px;
+    }
+
+    .pipeline__step::after {
+      left: 80px;
+    }
+
+    .pipeline__stats div {
+      padding: 12px 10px;
+    }
+  }
+</style>

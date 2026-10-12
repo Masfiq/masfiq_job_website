@@ -1,0 +1,83 @@
+---
+import Icon from './Icon.astro';
+import { site, writing } from '../data/content';
+import { newTab, newTabHint } from '../lib/links';
+---
+
+<section class="section section--band writing" id="writing" aria-labelledby="writing-title">
+  <div class="container">
+    <div class="card writing__card tone-teal">
+      <span class="icon-tile writing__icon" aria-hidden="true">
+        <Icon name="doc" />
+      </span>
+      <div class="writing__body">
+        <span class="eyebrow">Writing and research</span>
+        <h2 id="writing-title" class="writing__title">{writing.papers}</h2>
+        <p class="writing__text">{writing.tutorials}</p>
+        <div class="writing__links">
+          <a class="btn btn--blue btn--sm" href={site.scholar} {...newTab}>
+            <Icon name="scholar" />
+            Google Scholar
+            <span class="sr-only">{newTabHint}</span>
+          </a>
+          <a class="btn btn--outlined btn--sm tone-teal" href={site.medium} {...newTab}>
+            <Icon name="medium" />
+            Medium
+            <span class="sr-only">{newTabHint}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .writing {
+    padding-block: clamp(56px, 8vw, 96px);
+  }
+
+  .writing__card {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 28px;
+    padding: clamp(28px, 4vw, 48px);
+    background:
+      radial-gradient(600px 300px at 100% 0%, var(--blue-tint), transparent 70%),
+      radial-gradient(500px 260px at 0% 100%, var(--teal-tint), transparent 70%),
+      var(--card);
+  }
+
+  .writing__icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .writing__title {
+    max-width: 46ch;
+    font-size: clamp(1.25rem, 2.2vw, 1.625rem);
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .writing__text {
+    max-width: 64ch;
+    margin-top: 16px;
+    color: var(--text-2);
+  }
+
+  .writing__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  @media (max-width: 640px) {
+    .writing__card {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+</style>

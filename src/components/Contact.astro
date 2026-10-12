@@ -1,0 +1,192 @@
+---
+import Icon from './Icon.astro';
+import { contact, site } from '../data/content';
+import { newTab, newTabHint } from '../lib/links';
+
+const items = [
+  { label: 'Email', value: site.email, href: `mailto:${site.email}`, icon: 'mail', tone: 'tone-red', external: false },
+  { label: 'LinkedIn', value: site.name, href: site.linkedin, icon: 'linkedin', tone: 'tone-blue', external: true },
+  { label: 'GitHub', value: 'github.com/Masfiq', href: site.github, icon: 'github', tone: 'tone-violet', external: true },
+  { label: 'Google Scholar', value: site.name, href: site.scholar, icon: 'scholar', tone: 'tone-teal', external: true },
+] as const;
+---
+
+<section class="section contact" id="contact" aria-labelledby="contact-title">
+  <div class="container">
+    <div class="contact__panel">
+      <div class="contact__copy">
+        <h2 id="contact-title" class="contact__title">{contact.heading}</h2>
+        <p class="contact__text">{contact.text}</p>
+        <p class="contact__where">
+          <Icon name="pin" />
+          Based in {site.location}
+        </p>
+      </div>
+
+      <ul class="contact__list">
+        {
+          items.map((item) => (
+            <li>
+              <a class={`contact__item ${item.tone}`} href={item.href} {...(item.external ? newTab : {})}>
+                <span class="contact__icon" aria-hidden="true">
+                  <Icon name={item.icon} />
+                </span>
+                <span>
+                  <span class="contact__label">{item.label}</span>
+                  <span class="contact__value">{item.value}</span>
+                </span>
+                {item.external && <span class="sr-only">{newTabHint}</span>}
+                <Icon name={item.external ? 'external' : 'arrow-right'} class="contact__go" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact__panel {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+    padding: clamp(32px, 6vw, 72px);
+    border-radius: 36px;
+    background: linear-gradient(135deg, #00594f 0%, #1557b0 55%, #6a1fae 100%);
+    color: #ffffff;
+  }
+
+  .contact__panel::after {
+    content: '';
+    position: absolute;
+    right: -120px;
+    top: -120px;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+  }
+
+  .contact__copy,
+  .contact__list {
+    position: relative;
+    z-index: 1;
+  }
+
+  .contact__title {
+    color: #ffffff;
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    letter-spacing: -0.025em;
+  }
+
+  .contact__text {
+    max-width: 36ch;
+    margin-top: 16px;
+    color: #ffffff;
+    font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  }
+
+  .contact__where {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    padding: 8px 16px;
+    border-radius: var(--pill);
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    font-size: 0.9375rem;
+  }
+
+  .contact__where :global(svg) {
+    width: 18px;
+    height: 18px;
+  }
+
+  .contact__list {
+    display: grid;
+    gap: 10px;
+    list-style: none;
+  }
+
+  .contact__item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 18px 12px 12px;
+    border-radius: var(--radius);
+    background: #ffffff;
+    color: var(--text);
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    transition:
+      transform 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
+  }
+
+  .contact__item:hover {
+    color: var(--text);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  }
+
+  .contact__item:focus-visible {
+    outline-color: #ffffff;
+  }
+
+  .contact__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--c-tint);
+    color: var(--c-ink);
+    flex: none;
+  }
+
+  .contact__icon :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+
+  .contact__label {
+    display: block;
+    color: var(--c-ink);
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  .contact__value {
+    display: block;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+
+  .contact__item :global(.contact__go) {
+    width: 18px;
+    height: 18px;
+    margin-left: auto;
+    color: var(--text-3);
+    flex: none;
+  }
+
+  @media (max-width: 860px) {
+    .contact__panel {
+      grid-template-columns: 1fr;
+      border-radius: 28px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact__item:hover {
+      transform: none;
+    }
+  }
+</style>

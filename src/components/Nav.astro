@@ -1,0 +1,278 @@
+---
+import Icon from './Icon.astro';
+import { nav, site } from '../data/content';
+import { newTab, newTabHint } from '../lib/links';
+---
+
+<header class="nav" data-nav>
+  <div class="rainbow-bar nav__stripe" aria-hidden="true"></div>
+  <div class="container nav__inner">
+    <a class="nav__brand" href="#top">
+      <span class="nav__mark" aria-hidden="true">MR</span>
+      <span class="nav__name">{site.name}</span>
+    </a>
+
+    <nav class="nav__links" aria-label="Main">
+      <ul id="nav-menu" data-menu>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+        <li class="nav__menu-resume">
+          <a class="btn btn--filled btn--sm" href={site.resume} {...newTab}>Resume<span class="sr-only">{newTabHint}</span></a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="nav__actions">
+      <a class="nav__icon-link" href={site.github} aria-label={`GitHub profile${newTabHint}`} {...newTab}>
+        <Icon name="github" />
+      </a>
+      <a class="btn btn--filled btn--sm nav__resume" href={site.resume} {...newTab}>
+        <Icon name="download" />
+        Resume
+        <span class="sr-only">{newTabHint}</span>
+      </a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-menu" data-toggle>
+        <span class="sr-only" data-toggle-label>Open menu</span>
+        <Icon name="menu" class="nav__toggle-open" />
+        <Icon name="close" class="nav__toggle-close" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-nav]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-toggle]');
+  const label = document.querySelector<HTMLElement>('[data-toggle-label]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+
+  if (header && toggle && label && menu) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      header.classList.toggle('is-open', open);
+      label.textContent = open ? 'Close menu' : 'Open menu';
+    };
+
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && header.classList.contains('is-open')) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        header.classList.toggle('is-scrolled', window.scrollY > 8);
+        ticking = false;
+      });
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+
+  .nav.is-scrolled {
+    border-bottom-color: var(--border);
+  }
+
+  .nav__stripe {
+    height: 3px;
+  }
+
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    height: var(--nav-h);
+  }
+
+  .nav__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    font-size: 1.125rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .nav__brand:hover {
+    color: var(--text);
+  }
+
+  .nav__mark {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--blue) 60%, var(--violet));
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .nav__links {
+    margin-left: auto;
+  }
+
+  .nav__links ul {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+  }
+
+  .nav__links a:not(.btn) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: var(--pill);
+    color: var(--text-2);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+
+  .nav__links a:not(.btn):hover {
+    background: var(--blue-tint);
+    color: var(--blue-ink);
+  }
+
+  .nav__menu-resume {
+    display: none;
+  }
+
+  .nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav__icon-link,
+  .nav__toggle {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease);
+  }
+
+  .nav__icon-link:hover,
+  .nav__toggle:hover {
+    background: var(--blue-tint);
+    color: var(--blue-ink);
+  }
+
+  .nav__icon-link :global(svg) {
+    width: 22px;
+    height: 22px;
+  }
+
+  .nav__toggle {
+    display: none;
+  }
+
+  .nav__toggle :global(svg) {
+    width: 24px;
+    height: 24px;
+  }
+
+  .nav__toggle :global(.nav__toggle-close) {
+    display: none;
+  }
+
+  @media (max-width: 880px) {
+    .nav__toggle {
+      display: grid;
+    }
+
+    .nav__resume {
+      display: none;
+    }
+
+    .nav__links {
+      position: absolute;
+      top: calc(var(--nav-h) + 3px);
+      left: 0;
+      right: 0;
+      display: none;
+      padding: 8px var(--gutter) 20px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-2);
+    }
+
+    .nav.is-open .nav__links {
+      display: block;
+    }
+
+    .nav.is-open :global(.nav__toggle-open) {
+      display: none;
+    }
+
+    .nav.is-open :global(.nav__toggle-close) {
+      display: block;
+    }
+
+    .nav__links ul {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 2px;
+    }
+
+    .nav__links a:not(.btn) {
+      min-height: 48px;
+      padding: 0 16px;
+      font-size: 1rem;
+    }
+
+    .nav__menu-resume {
+      display: block;
+      padding-top: 12px;
+    }
+
+    .nav__menu-resume .btn {
+      width: 100%;
+      min-height: 48px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .nav__name {
+      display: none;
+    }
+  }
+</style>

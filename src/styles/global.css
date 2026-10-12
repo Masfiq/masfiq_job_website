@@ -1,0 +1,449 @@
+/* ==========================================================================
+   Fonts: Google Sans and Google Sans Code from Google Fonts (SIL OFL),
+   self hosted Latin subsets so the first paint does not wait on a third party.
+   ========================================================================== */
+@font-face {
+  font-family: 'Google Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/google-sans-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Google Sans Code';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/google-sans-code-latin.woff2') format('woff2');
+}
+
+/* ==========================================================================
+   Design tokens: white surfaces, deep teal brand, Google style color tones
+   ========================================================================== */
+:root {
+  color-scheme: light;
+
+  --font-sans: 'Google Sans', 'Google Sans Text', Roboto, 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  --font-mono: 'Google Sans Code', 'Roboto Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  /* Surfaces */
+  --bg: #ffffff;
+  --bg-band: #f8fafd;
+  --card: #ffffff;
+  --border: #e2e6ec;
+  --border-strong: #c4cad3;
+
+  /* Text */
+  --text: #1f1f1f;
+  --text-2: #444746;
+  --text-3: #5f6368;
+
+  /* Brand: deep teal, matches the resume */
+  --accent: #00695c;
+  --accent-hover: #00564b;
+  --on-accent: #ffffff;
+  --accent-soft: #e0f2f1;
+  --accent-soft-2: #c8e8e5;
+  --on-accent-soft: #004d40;
+
+  /* Color tones (base, ink for text on white or tint, tint background) */
+  --teal: #00897b;
+  --teal-ink: #00695c;
+  --teal-tint: #e0f2f1;
+  --blue: #1a73e8;
+  --blue-ink: #1557b0;
+  --blue-tint: #e8f0fe;
+  --green: #1e8e3e;
+  --green-ink: #137333;
+  --green-tint: #e6f4ea;
+  --amber: #e8710a;
+  --amber-ink: #a04e00;
+  --amber-tint: #feefe3;
+  --red: #d93025;
+  --red-ink: #b31412;
+  --red-tint: #fce8e6;
+  --violet: #9334e6;
+  --violet-ink: #7627bb;
+  --violet-tint: #f3e8fd;
+
+  --rainbow: linear-gradient(90deg, var(--teal), var(--blue) 30%, var(--violet) 55%, var(--red) 78%, var(--amber));
+
+  --shadow-1: 0 1px 2px rgba(60, 64, 67, 0.12), 0 1px 3px 1px rgba(60, 64, 67, 0.08);
+  --shadow-2: 0 1px 3px rgba(60, 64, 67, 0.15), 0 4px 8px 3px rgba(60, 64, 67, 0.08);
+  --shadow-3: 0 16px 40px rgba(60, 64, 67, 0.12), 0 2px 6px rgba(60, 64, 67, 0.08);
+
+  --radius-sm: 12px;
+  --radius: 20px;
+  --radius-lg: 28px;
+  --pill: 999px;
+
+  --nav-h: 64px;
+  --max: 1200px;
+  --gutter: clamp(20px, 5vw, 48px);
+
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Default tone; components override with a .tone-* class */
+  --c: var(--teal);
+  --c-ink: var(--teal-ink);
+  --c-tint: var(--teal-tint);
+}
+
+.tone-teal {
+  --c: var(--teal);
+  --c-ink: var(--teal-ink);
+  --c-tint: var(--teal-tint);
+}
+.tone-blue {
+  --c: var(--blue);
+  --c-ink: var(--blue-ink);
+  --c-tint: var(--blue-tint);
+}
+.tone-green {
+  --c: var(--green);
+  --c-ink: var(--green-ink);
+  --c-tint: var(--green-tint);
+}
+.tone-amber {
+  --c: var(--amber);
+  --c-ink: var(--amber-ink);
+  --c-tint: var(--amber-tint);
+}
+.tone-red {
+  --c: var(--red);
+  --c-ink: var(--red-ink);
+  --c-tint: var(--red-tint);
+}
+.tone-violet {
+  --c: var(--violet);
+  --c-ink: var(--violet-ink);
+  --c-tint: var(--violet-tint);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--blue-ink);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--blue);
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -100px;
+  z-index: 100;
+  padding: 12px 20px;
+  border-radius: var(--pill);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+/* ==========================================================================
+   Layout helpers
+   ========================================================================== */
+.container {
+  width: 100%;
+  max-width: calc(var(--max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: clamp(72px, 10vw, 128px);
+}
+
+.section--band {
+  background: var(--bg-band);
+}
+
+.section-head {
+  max-width: 720px;
+  margin-bottom: clamp(36px, 5vw, 56px);
+}
+
+/* Small colored pill above each section title */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 6px 14px 6px 10px;
+  border-radius: var(--pill);
+  background: var(--c-tint);
+  color: var(--c-ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.section-title {
+  font-size: clamp(2rem, 4.2vw, 3rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.section-lede {
+  margin-top: 16px;
+  color: var(--text-2);
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  line-height: 1.55;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 24px;
+  border: 1px solid transparent;
+  border-radius: var(--pill);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.btn svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.btn--filled {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.btn--filled:hover {
+  background: var(--accent-hover);
+  color: var(--on-accent);
+  box-shadow: var(--shadow-1);
+}
+
+.btn--blue {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+.btn--blue:hover {
+  background: var(--blue-ink);
+  color: #ffffff;
+  box-shadow: var(--shadow-1);
+}
+
+/* Tonal button picks up the surrounding tone */
+.btn--tonal {
+  background: var(--c-tint);
+  color: var(--c-ink);
+}
+
+.btn--tonal:hover {
+  background: color-mix(in srgb, var(--c) 18%, white);
+  color: var(--c-ink);
+}
+
+.btn--outlined {
+  border-color: var(--border-strong);
+  background: transparent;
+  color: var(--text);
+}
+
+.btn--outlined:hover {
+  border-color: var(--c);
+  background: var(--c-tint);
+  color: var(--c-ink);
+}
+
+.btn--sm {
+  min-height: 40px;
+  padding: 0 18px;
+  font-size: 0.9375rem;
+}
+
+.btn--sm svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ==========================================================================
+   Chips and tags
+   ========================================================================== */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--c-tint);
+  color: var(--c-ink);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 16px;
+  border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+  border-radius: var(--pill);
+  background: var(--c-tint);
+  color: var(--c-ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ==========================================================================
+   Cards
+   ========================================================================== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+/* Colored icon tile used on cards */
+.icon-tile {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--c);
+  color: #ffffff;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--c) 30%, transparent);
+  flex: none;
+}
+
+.icon-tile svg {
+  width: 26px;
+  height: 26px;
+}
+
+/* Thin multi color stripe */
+.rainbow-bar {
+  height: 4px;
+  background: var(--rainbow);
+}

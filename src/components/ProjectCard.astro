@@ -1,0 +1,193 @@
+---
+import Icon from './Icon.astro';
+import type { Project } from '../data/content';
+import { newTab, newTabHint } from '../lib/links';
+
+interface Props {
+  project: Project;
+  compact?: boolean;
+}
+
+const { project, compact = false } = Astro.props;
+const headingId = `project-${project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+---
+
+<article
+  class:list={['card', 'project', `tone-${project.tone}`, { 'project--compact': compact }]}
+  aria-labelledby={headingId}
+>
+  <div class="project__top">
+    <span class="icon-tile project__icon" aria-hidden="true">
+      <Icon name={project.icon} />
+    </span>
+    {project.label && <span class="project__label">{project.label}</span>}
+  </div>
+
+  <h3 id={headingId} class="project__title">{project.title}</h3>
+  <p class="project__desc">{project.description}</p>
+
+  <ul class="tags project__tags" aria-label="Technologies">
+    {project.tech.map((t) => <li class="tag">{t}</li>)}
+  </ul>
+
+  {
+    project.bullets.length > 0 && (
+      <ul class="project__bullets">
+        {project.bullets.map((b) => (
+          <li>{b}</li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    project.github && (
+      <div class="project__footer">
+        <a class="btn btn--tonal btn--sm" href={project.github} {...newTab}>
+          <Icon name="github" />
+          View on GitHub
+          <span class="sr-only">
+            : {project.title}
+            {newTabHint}
+          </span>
+        </a>
+      </div>
+    )
+  }
+</article>
+
+<style>
+  .project {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: clamp(24px, 3vw, 32px);
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--c-tint) 85%, white) 0, var(--card) 170px),
+      var(--card);
+    transition:
+      box-shadow 0.25s var(--ease),
+      transform 0.25s var(--ease),
+      border-color 0.25s var(--ease);
+  }
+
+  /* colored top edge */
+  .project::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: var(--c);
+  }
+
+  .project:hover {
+    border-color: color-mix(in srgb, var(--c) 40%, transparent);
+    box-shadow: var(--shadow-3);
+    transform: translateY(-3px);
+  }
+
+  .project__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .project__label {
+    padding: 4px 12px;
+    border-radius: var(--pill);
+    background: #ffffff;
+    border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
+    color: var(--c-ink);
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  .project__title {
+    font-size: clamp(1.375rem, 2.2vw, 1.625rem);
+    line-height: 1.2;
+  }
+
+  .project__desc {
+    margin-top: 10px;
+    color: var(--text-2);
+    font-size: 1.0625rem;
+    line-height: 1.5;
+  }
+
+  .project__tags {
+    margin-top: 20px;
+  }
+
+  .project__bullets {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    list-style: none;
+  }
+
+  .project__bullets li {
+    position: relative;
+    padding-left: 22px;
+    color: var(--text-2);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  .project__bullets li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0.62em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--c);
+  }
+
+  .project__footer {
+    margin-top: auto;
+    padding-top: 28px;
+  }
+
+  .project--compact {
+    padding: 24px;
+  }
+
+  .project--compact .project__top {
+    margin-bottom: 16px;
+  }
+
+  .project--compact .project__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  .project--compact .project__icon :global(svg) {
+    width: 22px;
+    height: 22px;
+  }
+
+  .project--compact .project__title {
+    font-size: 1.25rem;
+  }
+
+  .project--compact .project__desc {
+    font-size: 1rem;
+  }
+
+  .project--compact .project__footer {
+    padding-top: 20px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project:hover {
+      transform: none;
+    }
+  }
+</style>

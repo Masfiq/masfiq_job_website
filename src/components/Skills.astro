@@ -1,0 +1,80 @@
+---
+import { skills } from '../data/content';
+---
+
+<section class="section section--band" id="skills" aria-labelledby="skills-title">
+  <div class="container">
+    <header class="section-head tone-amber">
+      <span class="eyebrow">Skills</span>
+      <h2 id="skills-title" class="section-title">Tools I work with</h2>
+    </header>
+
+    <div class="skills-grid">
+      {
+        skills.map((group) => (
+          <div class={`card skills-group tone-${group.tone}`}>
+            <h3 class="skills-group__title">{group.group}</h3>
+            <ul class="skills-group__chips">
+              {group.items.map((item) => (
+                <li class="chip">{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .skills-group {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(24px, 3vw, 32px);
+  }
+
+  .skills-group::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: var(--c);
+  }
+
+  .skills-group__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: var(--c-ink);
+    font-size: 1.125rem;
+  }
+
+  .skills-group__title::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--c);
+  }
+
+  .skills-group__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+  }
+
+  @media (max-width: 760px) {
+    .skills-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+</style>

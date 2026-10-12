@@ -1,0 +1,142 @@
+---
+import Icon from './Icon.astro';
+import { nav, site } from '../data/content';
+import { newTab, newTabHint } from '../lib/links';
+
+const social = [
+  { label: 'GitHub', href: site.github, icon: 'github', tone: 'tone-violet' },
+  { label: 'LinkedIn', href: site.linkedin, icon: 'linkedin', tone: 'tone-blue' },
+  { label: 'Google Scholar', href: site.scholar, icon: 'scholar', tone: 'tone-teal' },
+  { label: 'Medium', href: site.medium, icon: 'medium', tone: 'tone-green' },
+] as const;
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="rainbow-bar" aria-hidden="true"></div>
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="footer__name">{site.name}</span>
+      <span class="footer__meta">{site.role}, based in {site.location}</span>
+    </div>
+
+    <nav class="footer__nav" aria-label="Footer">
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <ul class="footer__social">
+      {
+        social.map((s) => (
+          <li>
+            <a class={s.tone} href={s.href} aria-label={`${s.label}${newTabHint}`} {...newTab}>
+              <Icon name={s.icon} />
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a class="tone-red" href={`mailto:${site.email}`} aria-label="Email"><Icon name="mail" /></a>
+      </li>
+    </ul>
+  </div>
+  <div class="container footer__bottom">
+    <p>&copy; {year} {site.name}</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-bottom: 32px;
+    background: var(--bg-band);
+  }
+
+  .footer__inner {
+    padding-top: 48px;
+  }
+
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px 40px;
+  }
+
+  .footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .footer__name {
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+
+  .footer__meta {
+    color: var(--text-3);
+    font-size: 0.9375rem;
+  }
+
+  .footer__nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    list-style: none;
+  }
+
+  .footer__nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text-2);
+    font-size: 0.9375rem;
+    text-decoration: none;
+  }
+
+  .footer__nav a:hover {
+    color: var(--blue-ink);
+    text-decoration: underline;
+  }
+
+  .footer__social {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+
+  .footer__social a {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: var(--text-2);
+    transition: background-color 0.2s var(--ease);
+  }
+
+  .footer__social a:hover {
+    background: var(--c-tint);
+    color: var(--c-ink);
+  }
+
+  .footer__social :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+
+  .footer__bottom {
+    margin-top: 32px;
+    color: var(--text-3);
+    font-size: 0.875rem;
+  }
+</style>

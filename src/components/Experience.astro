@@ -1,0 +1,169 @@
+---
+import { experience } from '../data/content';
+
+const jobs = experience.filter((j) => !j.hidden);
+---
+
+<section class="section" id="experience" aria-labelledby="experience-title">
+  <div class="container">
+    <header class="section-head tone-green">
+      <span class="eyebrow">Experience</span>
+      <h2 id="experience-title" class="section-title">Where I have worked</h2>
+    </header>
+
+    <ol class="timeline">
+      {
+        jobs.map((job) => (
+          <li class={`timeline__item tone-${job.tone}`}>
+            <div class="timeline__dates">{job.dates}</div>
+            <div class="timeline__marker" aria-hidden="true" />
+            <div class="card timeline__content">
+              <h3 class="timeline__role">{job.role}</h3>
+              <p class="timeline__org">
+                <span class="timeline__orgname">{job.org}</span>
+                <span class="timeline__loc">{job.location}</span>
+              </p>
+              {job.details.length > 0 && (
+                <ul class="timeline__details">
+                  {job.details.map((d) => (
+                    <li>{d}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .timeline {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .timeline__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 180px 32px minmax(0, 1fr);
+    column-gap: 24px;
+    padding-bottom: 24px;
+  }
+
+  .timeline__item:last-child {
+    padding-bottom: 0;
+  }
+
+  /* vertical line */
+  .timeline__item::before {
+    content: '';
+    position: absolute;
+    left: calc(180px + 24px + 15px);
+    top: 34px;
+    bottom: -4px;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .timeline__item:last-child::before {
+    display: none;
+  }
+
+  .timeline__dates {
+    padding-top: 22px;
+    color: var(--c-ink);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-align: right;
+  }
+
+  .timeline__marker {
+    position: relative;
+    z-index: 1;
+    width: 16px;
+    height: 16px;
+    margin: 26px auto 0;
+    border-radius: 50%;
+    background: var(--c);
+    box-shadow: 0 0 0 5px var(--c-tint);
+  }
+
+  .timeline__content {
+    padding: 20px 24px;
+    border-left: 4px solid var(--c);
+    border-radius: var(--radius);
+    transition: box-shadow 0.25s var(--ease);
+  }
+
+  .timeline__content:hover {
+    box-shadow: var(--shadow-2);
+  }
+
+  .timeline__role {
+    font-size: clamp(1.125rem, 1.8vw, 1.3125rem);
+    line-height: 1.3;
+  }
+
+  .timeline__org {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 12px;
+    margin-top: 4px;
+    color: var(--text-2);
+  }
+
+  .timeline__loc {
+    color: var(--text-3);
+  }
+
+  .timeline__details {
+    display: grid;
+    gap: 6px;
+    max-width: 72ch;
+    margin-top: 12px;
+    padding-left: 20px;
+    list-style: disc;
+    color: var(--text-2);
+    font-size: 0.9375rem;
+  }
+
+  .timeline__details li::marker {
+    color: var(--c);
+  }
+
+  @media (max-width: 720px) {
+    .timeline__item {
+      grid-template-columns: 24px minmax(0, 1fr);
+      column-gap: 14px;
+      padding-bottom: 20px;
+    }
+
+    .timeline__item::before {
+      left: 11px;
+      top: 24px;
+    }
+
+    .timeline__dates {
+      grid-column: 2;
+      grid-row: 1;
+      padding-top: 0;
+      margin-bottom: 8px;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    .timeline__marker {
+      grid-column: 1;
+      grid-row: 1;
+      margin: 3px auto 0;
+    }
+
+    .timeline__content {
+      grid-column: 2;
+      padding: 16px 18px;
+    }
+  }
+</style>

@@ -1,0 +1,123 @@
+---
+import Icon from './Icon.astro';
+import { education } from '../data/content';
+---
+
+<section class="section" id="education" aria-labelledby="education-title">
+  <div class="container">
+    <header class="section-head tone-violet">
+      <span class="eyebrow">Education</span>
+      <h2 id="education-title" class="section-title">Degrees</h2>
+    </header>
+
+    <div class="edu-grid">
+      {
+        education.map((e) => (
+          <article class={`card edu tone-${e.tone}`}>
+            <div class="edu__top">
+              <span class="icon-tile" aria-hidden="true">
+                <Icon name="cap" />
+              </span>
+              <span class="edu__grade">{e.grade}</span>
+            </div>
+            <h3 class="edu__degree">{e.degree}</h3>
+            <p class="edu__school">{e.school}</p>
+            <p class="edu__meta">
+              <span>{e.location}</span>
+              <span>{e.dates}</span>
+            </p>
+            {e.coursework && (
+              <p class="edu__course">
+                <span class="edu__course-label">Coursework:</span> {e.coursework}
+              </p>
+            )}
+            {e.notes.length > 0 && (
+              <ul class="edu__notes">
+                {e.notes.map((n) => (
+                  <li class="chip">{n}</li>
+                ))}
+              </ul>
+            )}
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .edu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .edu {
+    padding: clamp(24px, 3vw, 32px);
+    background: linear-gradient(160deg, var(--c-tint) 0, var(--card) 55%);
+  }
+
+  .edu__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .edu__grade {
+    padding: 6px 14px;
+    border-radius: var(--pill);
+    background: var(--c-ink);
+    color: #ffffff;
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  .edu__degree {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: 1.25;
+  }
+
+  .edu__school {
+    margin-top: 6px;
+    color: var(--c-ink);
+    font-size: 1.0625rem;
+    font-weight: 500;
+  }
+
+  .edu__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin-top: 8px;
+    color: var(--text-3);
+    font-size: 0.9375rem;
+  }
+
+  .edu__course {
+    margin-top: 16px;
+    color: var(--text-2);
+    font-size: 0.9375rem;
+  }
+
+  .edu__course-label {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .edu__notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+    list-style: none;
+  }
+
+  @media (max-width: 760px) {
+    .edu-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+</style>

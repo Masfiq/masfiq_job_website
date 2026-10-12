@@ -1,0 +1,62 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import { moreProjects, projects } from '../data/content';
+---
+
+<section class="section section--band" id="projects" aria-labelledby="projects-title">
+  <div class="container">
+    <header class="section-head tone-blue">
+      <span class="eyebrow">Projects</span>
+      <h2 id="projects-title" class="section-title">Software I have built</h2>
+      <p class="section-lede">Data pipelines, APIs, web applications, and deep learning systems, written mostly in Python.</p>
+    </header>
+
+    <div class="projects-grid">
+      {projects.map((p) => <ProjectCard project={p} />)}
+    </div>
+
+    {
+      moreProjects.length > 0 && (
+        <>
+          <h3 class="more-title">More projects</h3>
+          <div class="projects-grid projects-grid--more">
+            {moreProjects.map((p) => (
+              <ProjectCard project={p} compact />
+            ))}
+          </div>
+        </>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .projects-grid--more {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .more-title {
+    margin: 56px 0 20px;
+    font-size: 1.25rem;
+  }
+
+  @media (max-width: 960px) {
+    .projects-grid--more {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 760px) {
+    .projects-grid,
+    .projects-grid--more {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+</style>
