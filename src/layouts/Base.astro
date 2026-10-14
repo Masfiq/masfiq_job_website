@@ -38,6 +38,17 @@ const personJsonLd = {
     <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
+    <!-- Turn on animations unless the visitor prefers reduced motion. If the
+         animation script has not started within 3 s, show everything anyway. -->
+    <script is:inline>
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('motion');
+        setTimeout(function () {
+          if (!window.__motion) document.documentElement.classList.remove('motion');
+        }, 3000);
+      }
+    </script>
+
     <!-- Open Graph and Twitter cards: link previews on LinkedIn, Handshake, Slack -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />

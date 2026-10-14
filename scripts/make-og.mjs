@@ -10,10 +10,11 @@ const font = "'Google Sans', 'Segoe UI', Roboto, Arial, sans-serif";
 const mono = "'Google Sans Code', Consolas, 'Roboto Mono', monospace";
 const tags = [
   ['Python', '#e8f0fe', '#1557b0'],
+  ['C#', '#f3e8fd', '#7627bb'],
   ['FastAPI', '#e6f4ea', '#137333'],
-  ['Django', '#feefe3', '#a04e00'],
-  ['PyTorch', '#fce8e6', '#b31412'],
-  ['ETL pipelines', '#f3e8fd', '#7627bb'],
+  ['PostgreSQL', '#feefe3', '#a04e00'],
+  ['Docker', '#fce8e6', '#b31412'],
+  ['ETL pipelines', '#e0f2f1', '#00695c'],
 ];
 
 let x = 96;
@@ -57,8 +58,8 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
   <text x="124" y="141" text-anchor="middle" font-family="${font}" font-size="22" font-weight="700" fill="#ffffff">MR</text>
   <text x="170" y="141" font-family="${font}" font-size="26" fill="#424a49">Software Engineer</text>
   <text x="92" y="282" font-family="${font}" font-size="104" font-weight="500" letter-spacing="-3" fill="url(#name)">Masfiq Reza</text>
-  <text x="96" y="352" font-family="${font}" font-size="34" fill="#424a49">REST APIs, ETL pipelines with automated validation,</text>
-  <text x="96" y="398" font-family="${font}" font-size="34" fill="#424a49">and web applications in Python.</text>
+  <text x="96" y="352" font-family="${font}" font-size="34" fill="#424a49">Tested backend and data software in Python and C#:</text>
+  <text x="96" y="398" font-family="${font}" font-size="34" fill="#424a49">REST APIs, PostgreSQL, and validated ETL pipelines.</text>
   ${tagSvg}
   <text x="96" y="572" font-family="${font}" font-size="24" fill="#00695c">MS Computer Science, Colorado State University</text>
   <rect x="0" y="618" width="1200" height="12" fill="url(#bar)"/>

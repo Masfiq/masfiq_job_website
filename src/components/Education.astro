@@ -5,12 +5,12 @@ import { education } from '../data/content';
 
 <section class="section" id="education" aria-labelledby="education-title">
   <div class="container">
-    <header class="section-head tone-violet">
+    <header class="section-head tone-violet" data-reveal>
       <span class="eyebrow">Education</span>
-      <h2 id="education-title" class="section-title">Degrees</h2>
+      <h2 id="education-title" class="section-title" data-split>Degrees</h2>
     </header>
 
-    <div class="edu-grid">
+    <div class="edu-grid" data-reveal-group>
       {
         education.map((e) => (
           <article class={`card edu tone-${e.tone}`}>
@@ -32,7 +32,7 @@ import { education } from '../data/content';
               </p>
             )}
             {e.notes.length > 0 && (
-              <ul class="edu__notes">
+              <ul class="edu__notes" data-stagger>
                 {e.notes.map((n) => (
                   <li class="chip">{n}</li>
                 ))}

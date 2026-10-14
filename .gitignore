@@ -1,9 +1,57 @@
+# ---------------------------------------------------------------
+# Files and folders Git should NOT push to GitHub.
+# Add a line here for anything new you want to keep local.
+#   folder/      ignores a whole folder
+#   *.ext        ignores every file with that extension
+#   name.txt     ignores one file
+# ---------------------------------------------------------------
+
+# Dependencies (reinstalled with `npm install`)
 node_modules/
+
+# Build output (GitHub Actions rebuilds it on every push)
 dist/
 .astro/
+
+# Secrets and local settings (API keys, form keys, tokens)
 .env
 .env.*
-.DS_Store
-Thumbs.db
+!.env.example
+
+# Personal files you do not want public. Put drafts, notes,
+# other CV versions, etc. in this folder and they stay local.
+private/
+
+# Local CV versions. The published copy is public/resume.pdf.
+cv/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Lighthouse and test reports
 lighthouse-*.html
 lighthouse-*.json
+.lighthouseci/
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.bak
+.cache/
+
+# NOTE: public/resume.pdf is intentionally NOT ignored,
+# because the site's Resume button needs it to be published.

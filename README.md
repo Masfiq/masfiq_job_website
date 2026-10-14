@@ -19,13 +19,31 @@ npm run preview    # serve the built dist/ folder
 All text lives in **`src/data/content.ts`**: hero text, links, projects, experience, skills, education, writing, and contact.
 You should not need to touch any layout code.
 
+- **Hero slider:** the rotating project cards come from `showcase` in `content.ts` (steps, chips, and stats per project). Add, remove, or reorder slides there.
 - **Hide something until it is ready:** leave a URL as `''` (the GitHub button or link disappears), or set `hidden: true` on an experience entry.
-- **Add a project:** copy an object in `projects` (main grid) or `moreProjects` (smaller cards). `icon` can be `database`, `forest`, `store`, `cube`, or `flame`.
+- **Add a project:** copy an object in `projects` (main grid) or `moreProjects` (smaller cards). `icon` can be `pill`, `search`, `code`, `database`, `forest`, `store`, `cube`, or `flame`; `tone` sets the card color.
 - **Copy rule:** visible text must not contain em dashes, en dashes, or hyphens. `npm run build` fails and shows the offending line if it does. Proper names that include a hyphen (currently only `scikit-learn`) are allowed in `scripts/check-copy.mjs`.
 
 ## Replace the resume
 
 Put the PDF at **`public/resume.pdf`** (exact name). Every "Resume" button links to `/resume.pdf`. Commit and push to publish.
+Keep other CV versions in `cv/`; that folder is ignored by Git and never published.
+
+## Add a photo or project screenshots
+
+Put image files in `src/assets/`, then set the file name in `src/data/content.ts`:
+`site.photo` for your headshot, `image` and `imageAlt` on a project for a screenshot.
+Astro resizes them and converts them to WebP at build time. See `src/assets/README.md`.
+
+## Animations
+
+Animations use [anime.js](https://animejs.com) and live in `src/scripts/motion.ts`: letter by letter name
+reveal, a self drawing pipeline diagram with a looping "order" dot, a rippling dot grid in the hero (click to
+ripple), scroll linked experience timeline, draggable skill chips that spring back, and scroll reveals.
+Elements opt in with data attributes (`data-reveal`, `data-reveal-group`, `data-stagger`, `data-split`,
+`data-count`, `data-dotgrid`, `data-timeline`); each function in `motion.ts` can be removed on its own. Visitors who turn on
+"reduce motion" in their system settings see the page without animation, and content stays visible if
+JavaScript fails to load.
 
 ## Link preview image
 

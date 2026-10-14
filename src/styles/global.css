@@ -447,3 +447,79 @@ svg {
   height: 4px;
   background: var(--rainbow);
 }
+
+/* ==========================================================================
+   Motion (see src/scripts/motion.ts). These starting states apply only while
+   <html> has the `motion` class, which is never set for reduced motion users
+   and is removed by a safety timer if the animation script fails to load.
+   ========================================================================== */
+.motion [data-hero]:not(.is-in),
+.motion [data-pipeline]:not(.is-in),
+.motion [data-reveal]:not(.is-in),
+.motion [data-reveal-group] > :not(.is-in),
+.motion [data-stagger] > :not(.is-in),
+.motion [data-pipeline] :is(.pipeline__label, .pipeline__body, .pipeline__dot, .pipeline__line, .tag, [data-stat]):not(.is-in) {
+  opacity: 0;
+}
+
+.motion [data-hero-title]:not(.is-in),
+.motion [data-hero-soft]:not(.is-in) {
+  opacity: 0;
+}
+
+/* The "order" that travels down the hero diagram (created by motion.ts) */
+.pipeline__token {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 4px rgba(26, 115, 232, 0.18),
+    0 4px 14px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+/* Hero dot grid (built by motion.ts). Faded on the left so the text stays clean. */
+.dotgrid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  --fade-x: linear-gradient(90deg, transparent 8%, rgba(0, 0, 0, 0.12) 36%, #000 58%);
+  --fade-y: linear-gradient(180deg, #000 72%, transparent 100%);
+  -webkit-mask-image: var(--fade-x), var(--fade-y);
+  -webkit-mask-composite: source-in;
+  mask-image: var(--fade-x), var(--fade-y);
+  mask-composite: intersect;
+}
+
+@media (max-width: 960px) {
+  .dotgrid {
+    --fade-x: linear-gradient(90deg, #000, #000);
+    --fade-y: linear-gradient(180deg, transparent 38%, #000 62%, #000 88%, transparent 100%);
+  }
+}
+
+.dotgrid span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #c3cbd6;
+}
+
+/* Draggable chips (motion.ts, mouse and trackpad only) */
+.is-draggable {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.is-draggable:active {
+  cursor: grabbing;
+}

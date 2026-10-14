@@ -6,12 +6,14 @@ const jobs = experience.filter((j) => !j.hidden);
 
 <section class="section" id="experience" aria-labelledby="experience-title">
   <div class="container">
-    <header class="section-head tone-green">
+    <header class="section-head tone-green" data-reveal>
       <span class="eyebrow">Experience</span>
-      <h2 id="experience-title" class="section-title">Where I have worked</h2>
+      <h2 id="experience-title" class="section-title" data-split>Where I have worked</h2>
     </header>
 
-    <ol class="timeline">
+    <div class="timeline-wrap" data-timeline>
+    <span class="timeline__progress" aria-hidden="true"></span>
+    <ol class="timeline" data-reveal-group>
       {
         jobs.map((job) => (
           <li class={`timeline__item tone-${job.tone}`}>
@@ -35,10 +37,32 @@ const jobs = experience.filter((j) => !j.hidden);
         ))
       }
     </ol>
+    </div>
   </div>
 </section>
 
 <style>
+  .timeline-wrap {
+    position: relative;
+  }
+
+  /* Colored line that fills as you scroll (driven by motion.ts; hidden without it) */
+  .timeline__progress {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    left: calc(180px + 24px + 15px);
+    top: 34px;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(var(--blue), var(--teal), var(--green), var(--amber), var(--violet), var(--red));
+    transform-origin: top;
+  }
+
+  :global(.motion) .timeline__progress {
+    display: block;
+  }
+
   .timeline {
     margin: 0;
     padding: 0;
@@ -139,6 +163,11 @@ const jobs = experience.filter((j) => !j.hidden);
       grid-template-columns: 24px minmax(0, 1fr);
       column-gap: 14px;
       padding-bottom: 20px;
+    }
+
+    .timeline__progress {
+      left: 11px;
+      top: 11px;
     }
 
     .timeline__item::before {

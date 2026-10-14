@@ -1,32 +1,49 @@
 ---
+import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
-import { site } from '../data/content';
+import { showcase, site } from '../data/content';
+import { projectId } from '../lib/slug';
 import { newTab, newTabHint } from '../lib/links';
+import { getImage } from '../lib/images';
 
-const sources = [
-  { name: 'ACS', tone: 'tone-blue' },
-  { name: 'HMDA', tone: 'tone-green' },
-  { name: 'USDA', tone: 'tone-amber' },
-  { name: 'CDC PLACES', tone: 'tone-red' },
-  { name: 'Gazetteer', tone: 'tone-violet' },
-];
+const photo = getImage(site.photo);
+
+// Number shown before the count up animation runs (and when it cannot).
+const formatStat = (value: number, decimals = 0) =>
+  value.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 ---
 
 <section class="hero" id="top" aria-labelledby="hero-title">
   <div class="hero__glow" aria-hidden="true">
-    <span class="blob blob--blue"></span>
-    <span class="blob blob--teal"></span>
-    <span class="blob blob--violet"></span>
-    <span class="blob blob--amber"></span>
+    <span class="blob blob--blue" data-blob></span>
+    <span class="blob blob--teal" data-blob></span>
+    <span class="blob blob--violet" data-blob></span>
+    <span class="blob blob--amber" data-blob></span>
   </div>
+  <!-- Dot grid that ripples like the anime.js homepage; filled in by motion.ts -->
+  <div class="dotgrid" data-dotgrid aria-hidden="true"></div>
 
   <div class="container hero__inner">
     <div class="hero__copy">
-      <p class="hero__role">{site.headline}</p>
-      <h1 id="hero-title" class="hero__title">{site.name}</h1>
-      <p class="hero__summary">{site.summary}</p>
+      {
+        photo && (
+          <Image
+            class="hero__photo"
+            src={photo}
+            alt={`Photo of ${site.name}`}
+            width={176}
+            height={176}
+            densities={[1, 2]}
+            loading="eager"
+            data-hero
+          />
+        )
+      }
+      <p class="hero__role" data-hero>{site.headline}</p>
+      <h1 id="hero-title" class="hero__title" data-hero-title>{site.name}</h1>
+      <p class="hero__summary" data-hero-soft>{site.summary}</p>
 
-      <div class="hero__actions">
+      <div class="hero__actions" data-hero>
         <a class="btn btn--filled" href="#projects">
           View Projects
           <Icon name="arrow-down" />
@@ -43,7 +60,7 @@ const sources = [
         </a>
       </div>
 
-      <ul class="hero__links">
+      <ul class="hero__links" data-hero>
         <li>
           <a class="tone-blue" href={site.linkedin} {...newTab}>
             <Icon name="linkedin" />
@@ -67,64 +84,105 @@ const sources = [
       </ul>
     </div>
 
-    <figure class="pipeline" aria-label="Diagram of the Colorado Inequality Data Harmonizer pipeline">
-      <figcaption class="pipeline__head">
-        <span class="pipeline__dots" aria-hidden="true"><span></span><span></span><span></span></span>
-        Colorado Inequality Data Harmonizer
-      </figcaption>
+    <div
+      class="pipeline"
+      data-pipeline
+      data-showcase
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Featured projects"
+    >
+      <div class="pipeline__slides">
+        {
+          showcase.map((slide, si) => (
+            <div
+              class:list={['pipeline__slide', `tone-${slide.stats[0].tone}`, { 'is-active': si === 0 }]}
+              data-slide
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${si + 1} of ${showcase.length}: ${slide.project}`}
+              inert={si !== 0}
+            >
+              <div class="pipeline__head">
+                <span class="pipeline__dots" aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </span>
+                <span class="pipeline__title">{slide.project}</span>
+                <a class="pipeline__more" href={`#${projectId(slide.project)}`}>
+                  Details
+                  <span class="sr-only">: {slide.project}</span>
+                  <Icon name="arrow-down" />
+                </a>
+              </div>
 
-      <ol class="pipeline__steps">
-        <li class="pipeline__step tone-blue">
-          <span class="pipeline__label">Ingest</span>
-          <span class="pipeline__body">
-            <span class="pipeline__text">Five federal sources</span>
-            <span class="pipeline__chips">
-              {sources.map((s) => <span class={`tag ${s.tone}`}>{s.name}</span>)}
-            </span>
-          </span>
-        </li>
-        <li class="pipeline__step tone-green">
-          <span class="pipeline__label">Transform</span>
-          <span class="pipeline__body">
-            <span class="pipeline__text">ETL in Python and Pandas, 2010 and 2020 tracts reconciled</span>
-          </span>
-        </li>
-        <li class="pipeline__step tone-amber">
-          <span class="pipeline__label">Validate</span>
-          <span class="pipeline__body">
-            <span class="pipeline__text pipeline__check">
-              <Icon name="check" />
-              23 automated checks
-            </span>
-          </span>
-        </li>
-        <li class="pipeline__step tone-violet">
-          <span class="pipeline__label">Serve</span>
-          <span class="pipeline__body">
-            <span class="pipeline__serve">
-              <span class="tag">FastAPI</span>
-              <Icon name="arrow-right" class="pipeline__arrow" />
-              <span class="tag">Streamlit map</span>
-            </span>
-          </span>
-        </li>
-      </ol>
+              <ol class="pipeline__steps">
+                {slide.steps.map((step, i) => (
+                  <li class={`pipeline__step tone-${step.tone}`} data-step>
+                    <span class="pipeline__label">{step.label}</span>
+                    <span class="pipeline__dot" aria-hidden="true" />
+                    {i < slide.steps.length - 1 && <span class="pipeline__line" aria-hidden="true" />}
+                    <span class="pipeline__body">
+                      <span class:list={['pipeline__text', { pipeline__check: step.check }]}>
+                        {step.check && <Icon name="check" />}
+                        {step.text}
+                      </span>
+                      {step.chips && (
+                        <span class="pipeline__chips">
+                          {step.chips.map((c) => (
+                            <span class={`tag tone-${c.tone}`}>{c.name}</span>
+                          ))}
+                        </span>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ol>
 
-      <div class="pipeline__stats">
-        <div class="tone-blue">
-          <span class="pipeline__num">1,447</span>
-          <span class="pipeline__unit">census tracts</span>
-        </div>
-        <div class="tone-green">
-          <span class="pipeline__num">130</span>
-          <span class="pipeline__unit">columns</span>
-        </div>
-        <div class="tone-amber">
-          <span class="pipeline__num">23</span>
-          <span class="pipeline__unit">validation checks</span>
-        </div>
+              <div class="pipeline__stats">
+                {slide.stats.map((s) => (
+                  <div class={`tone-${s.tone}`} data-stat>
+                    <span class="pipeline__num">
+                      {s.prefix}
+                      <span data-count={s.value} data-decimals={s.decimals ?? 0}>
+                        {formatStat(s.value, s.decimals)}
+                      </span>
+                      {s.suffix}
+                    </span>
+                    <span class="pipeline__unit">{s.unit}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        }
       </div>
-    </figure>
+
+      <!-- Slider controls. Hidden until the script is ready, since they need it to work. -->
+      <div class="pipeline__nav">
+        <button class="pipeline__pause" type="button" data-pause aria-label="Pause the project slideshow">
+          <Icon name="pause" class="pipeline__icon-pause" />
+          <Icon name="play" class="pipeline__icon-play" />
+        </button>
+        <div class="pipeline__pills">
+          {
+            showcase.map((slide, si) => (
+              <button
+                class={`pipeline__pill tone-${slide.stats[0].tone}`}
+                type="button"
+                data-pill
+                aria-label={`Show project ${si + 1}: ${slide.project}`}
+                aria-current={si === 0 ? 'true' : undefined}
+              >
+                <span class="pipeline__fill" />
+              </button>
+            ))
+          }
+        </div>
+        <span class="pipeline__count" data-count-label aria-hidden="true">1 / {showcase.length}</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -147,6 +205,7 @@ const sources = [
     border-radius: 50%;
     filter: blur(60px);
     opacity: 0.5;
+    will-change: transform;
   }
 
   .blob--blue {
@@ -189,6 +248,18 @@ const sources = [
     gap: clamp(40px, 6vw, 80px);
   }
 
+  .hero__photo {
+    width: 88px;
+    height: 88px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ffffff;
+    box-shadow:
+      0 0 0 3px var(--blue),
+      var(--shadow-2);
+  }
+
   .hero__role {
     display: inline-block;
     padding: 6px 14px;
@@ -203,7 +274,8 @@ const sources = [
   .hero__title {
     margin-top: 20px;
     padding-bottom: 0.08em;
-    background: linear-gradient(90deg, var(--teal-ink), var(--blue) 45%, var(--violet-ink));
+    background: linear-gradient(90deg, var(--teal-ink), var(--blue) 40%, var(--violet-ink) 70%, var(--teal-ink));
+    background-size: 200% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: var(--teal-ink);
@@ -215,10 +287,10 @@ const sources = [
   }
 
   .hero__summary {
-    max-width: 34ch;
+    max-width: 36ch;
     margin-top: 20px;
     color: var(--text-2);
-    font-size: clamp(1.25rem, 2.2vw, 1.625rem);
+    font-size: clamp(1.1875rem, 2.1vw, 1.5rem);
     line-height: 1.45;
   }
 
@@ -226,7 +298,7 @@ const sources = [
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    margin-top: 40px;
+    margin-top: 36px;
   }
 
   .hero__actions .btn--outlined {
@@ -282,6 +354,165 @@ const sources = [
     font-weight: 500;
   }
 
+/* Slider: slides share one grid cell so the card keeps the height of the tallest slide */
+  .pipeline__slides {
+    display: grid;
+  }
+
+  .pipeline__slide {
+    grid-area: 1 / 1;
+    min-width: 0;
+    margin: 0;
+  }
+
+  .pipeline__slide:not(.is-active) {
+    visibility: hidden;
+  }
+
+  .pipeline__title {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .pipeline__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: var(--pill);
+    background: var(--c-tint);
+    color: var(--c-ink);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .pipeline__more:hover {
+    color: var(--c-ink);
+    text-decoration: underline;
+  }
+
+  .pipeline__more :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+
+  .pipeline__nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    visibility: hidden;
+  }
+
+  .pipeline:global(.is-ready) .pipeline__nav {
+    visibility: visible;
+  }
+
+  .pipeline__pause {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex: none;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--text-2);
+    cursor: pointer;
+  }
+
+  .pipeline:not(:global(.is-auto)) .pipeline__pause {
+    display: none;
+  }
+
+  .pipeline__pause:hover {
+    background: var(--blue-tint);
+    color: var(--blue-ink);
+  }
+
+  .pipeline__pause :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+
+  .pipeline__pause :global(.pipeline__icon-play),
+  .pipeline:global(.is-paused) .pipeline__pause :global(.pipeline__icon-pause) {
+    display: none;
+  }
+
+  .pipeline:global(.is-paused) .pipeline__pause :global(.pipeline__icon-play) {
+    display: block;
+  }
+
+  .pipeline__pills {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+
+  /* Each pill is a 24px tall button; the visible bar is drawn inside it */
+  .pipeline__pill {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    transition: width 0.35s var(--ease);
+  }
+
+  .pipeline__pill::before,
+  .pipeline__fill {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    height: 8px;
+    border-radius: var(--pill);
+  }
+
+  .pipeline__pill::before {
+    content: '';
+    background: var(--border-strong);
+  }
+
+  .pipeline__fill {
+    background: var(--c);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .pipeline__pill[aria-current] {
+    width: 56px;
+  }
+
+  .pipeline__pill[aria-current]::before {
+    left: 4px;
+    right: 4px;
+    background: var(--c-tint);
+  }
+
+  .pipeline__pill[aria-current] .pipeline__fill {
+    left: 4px;
+    right: 4px;
+  }
+
+  /* Without autoplay (reduced motion), the current pill is simply filled */
+  .pipeline:not(:global(.is-auto)) .pipeline__pill[aria-current] .pipeline__fill {
+    transform: scaleX(1);
+  }
+
+  .pipeline__count {
+    color: var(--text-3);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+
   .pipeline__dots {
     display: inline-flex;
     gap: 6px;
@@ -311,32 +542,29 @@ const sources = [
   }
 
   .pipeline__step {
+    --col: 92px;
+    --gap: 16px;
     position: relative;
     display: grid;
-    grid-template-columns: 92px 1fr;
-    gap: 16px;
+    grid-template-columns: var(--col) 1fr;
+    gap: var(--gap);
     padding-bottom: 20px;
   }
 
-  /* connector line */
-  .pipeline__step::before {
-    content: '';
+  /* connector line to the next step */
+  .pipeline__line {
     position: absolute;
-    left: 98px;
-    top: 10px;
-    bottom: -8px;
+    left: calc(var(--col) + var(--gap) / 2 - 1px);
+    top: 12px;
+    bottom: -6px;
     width: 2px;
-    background: var(--border);
+    background: linear-gradient(var(--c), var(--border));
+    transform-origin: top;
   }
 
-  .pipeline__step:last-child::before {
-    display: none;
-  }
-
-  .pipeline__step::after {
-    content: '';
+  .pipeline__dot {
     position: absolute;
-    left: 93px;
+    left: calc(var(--col) + var(--gap) / 2 - 6px);
     top: 4px;
     width: 12px;
     height: 12px;
@@ -367,8 +595,7 @@ const sources = [
     line-height: 1.45;
   }
 
-  .pipeline__chips,
-  .pipeline__serve {
+  .pipeline__chips {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -377,24 +604,20 @@ const sources = [
 
   .pipeline__check {
     display: inline-flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
   }
 
   .pipeline__check :global(svg) {
     width: 18px;
     height: 18px;
+    margin-top: 1px;
     padding: 2px;
     border-radius: 50%;
     background: var(--green);
     color: #ffffff;
     stroke-width: 3;
-  }
-
-  .pipeline__serve :global(.pipeline__arrow) {
-    width: 16px;
-    height: 16px;
-    color: var(--text-3);
+    flex: none;
   }
 
   .pipeline__stats {
@@ -417,7 +640,9 @@ const sources = [
     color: var(--c-ink);
     font-size: clamp(1.375rem, 2.4vw, 1.75rem);
     font-weight: 500;
+    font-variant-numeric: tabular-nums;
     line-height: 1.1;
+    white-space: nowrap;
   }
 
   .pipeline__unit {
@@ -446,8 +671,8 @@ const sources = [
     }
 
     .pipeline__step {
-      grid-template-columns: 80px 1fr;
-      gap: 12px;
+      --col: 74px;
+      --gap: 12px;
     }
 
     .pipeline__label {
@@ -459,16 +684,12 @@ const sources = [
       padding-left: 12px;
     }
 
-    .pipeline__step::before {
-      left: 85px;
-    }
-
-    .pipeline__step::after {
-      left: 80px;
-    }
-
     .pipeline__stats div {
       padding: 12px 10px;
+    }
+
+    .pipeline__num {
+      font-size: 1.25rem;
     }
   }
 </style>

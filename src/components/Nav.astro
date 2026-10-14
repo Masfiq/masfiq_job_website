@@ -80,6 +80,29 @@ import { newTab, newTabHint } from '../lib/links';
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Highlight the nav link for the section currently in view.
+    const links = new Map(
+      Array.from(menu.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')).map((a) => [a.hash.slice(1), a]),
+    );
+    const spy = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          links.forEach((a, id) => {
+            const on = id === entry.target.id;
+            a.classList.toggle('is-active', on);
+            if (on) a.setAttribute('aria-current', 'true');
+            else a.removeAttribute('aria-current');
+          });
+        }
+      },
+      { rootMargin: '-45% 0px -50% 0px' },
+    );
+    links.forEach((_, id) => {
+      const section = document.getElementById(id);
+      if (section) spy.observe(section);
+    });
   }
 </script>
 
@@ -159,6 +182,11 @@ import { newTab, newTabHint } from '../lib/links';
     font-weight: 500;
     text-decoration: none;
     transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+
+  .nav__links a.is-active {
+    background: var(--blue-tint);
+    color: var(--blue-ink);
   }
 
   .nav__links a:not(.btn):hover {

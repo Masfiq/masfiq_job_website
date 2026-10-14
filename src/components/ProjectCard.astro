@@ -2,6 +2,9 @@
 import Icon from './Icon.astro';
 import type { Project } from '../data/content';
 import { newTab, newTabHint } from '../lib/links';
+import { getImage } from '../lib/images';
+import { Image } from 'astro:assets';
+import { projectId } from '../lib/slug';
 
 interface Props {
   project: Project;
@@ -9,13 +12,26 @@ interface Props {
 }
 
 const { project, compact = false } = Astro.props;
-const headingId = `project-${project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+const headingId = projectId(project.title);
+const shot = getImage(project.image);
 ---
 
 <article
   class:list={['card', 'project', `tone-${project.tone}`, { 'project--compact': compact }]}
   aria-labelledby={headingId}
 >
+  {
+    shot && (
+      <Image
+        class="project__shot"
+        src={shot}
+        alt={project.imageAlt ?? `Screenshot of ${project.title}`}
+        widths={[480, 800, 1200]}
+        sizes="(max-width: 760px) 100vw, 560px"
+        loading="lazy"
+      />
+    )
+  }
   <div class="project__top">
     <span class="icon-tile project__icon" aria-hidden="true">
       <Icon name={project.icon} />
@@ -85,6 +101,16 @@ const headingId = `project-${project.title.toLowerCase().replace(/[^a-z0-9]+/g, 
     border-color: color-mix(in srgb, var(--c) 40%, transparent);
     box-shadow: var(--shadow-3);
     transform: translateY(-3px);
+  }
+
+  .project__shot {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
   }
 
   .project__top {
